@@ -83,7 +83,7 @@
    2) Uses Greedy Algorithm. (Once a node is processed, its shortest distance is confirmed and finalized)
 
 3. Bellman-Ford Algorithm (O(V*E)) : An algorithm that computes shortest paths from a single source vertex to all other vertices in a weighted graph. It can handle graphs with negative edge weights and can also detect negative weight cycles.
-   1) Like Topological Sort, it can handle Cycles.
+   1) Unlike Topological Sort, it can handle Cycles.
    2) Unlike Dijkstra's algorithm, Bellman-Ford can handle graphs with negative edge weights.
    3) But it is slower than Dijkstra's algorithm for graphs with non-negative weights.
 
@@ -106,59 +106,63 @@
 4. **Little o Notation (o)**: Describes an upper bound that is not tight. It indicates that a function grows strictly slower than another function.
 5. **Little omega Notation (ω)**: Describes a lower bound that is not tight. It indicates that a function grows strictly faster than another function.
 
-ex) If f(n) = Θ(g(n)), then f(n) is both O(g(n)) and Ω(g(n)). c1*g(n) <= f(n) <= c2*g(n) for some constants c1, c2 > 0 and sufficiently large n.
-ex) If f(n) = O(g(n)), then f(n) grows at most as fast as g(n). f(n) <= c*g(n) for some constant c > 0 and sufficiently large n.
-ex) If f(n) = Ω(g(n)), then f(n) grows at least as fast as g(n). f(n) >= c*g(n) for some constant c > 0 and sufficiently large n.
-ex) If f(n) = o(g(n)), then f(n) grows strictly slower than g(n). f(n) < c*g(n) for any constant c > 0 and sufficiently large n.
-ex) If f(n) = ω(g(n)), then f(n) grows strictly faster than g(n). f(n) > c*g(n) for any constant c > 0 and sufficiently large n.
+> - If f(n) = **Θ**(g(n)), then f(n) is both O(g(n)) and Ω(g(n)). `c1*g(n) <= f(n) <= c2*g(n)` for some constants c1, c2 > 0 and sufficiently large n.
+> - If f(n) = **O**(g(n)), then f(n) grows at most as fast as g(n). `f(n) <= c*g(n)` for some constant c > 0 and sufficiently large n.
+> - If f(n) = **Ω**(g(n)), then f(n) grows at least as fast as g(n). `f(n) >= c*g(n)` for some constant c > 0 and sufficiently large n.
+> - If f(n) = **o**(g(n)), then f(n) grows strictly slower than g(n). `f(n) < c*g(n)` for any constant c > 0 and sufficiently large n.
+> - If f(n) = **ω**(g(n)), then f(n) grows strictly faster than g(n). `f(n) > c*g(n)` for any constant c > 0 and sufficiently large n.
 
 > if Θ(g(n)) exists, O(..) and Ω(..) must also exist with the exact same function g(n), but not for o(..) and ω(..).
 > if O(..) and Ω(..) exist with different functions, Θ(..) cannot exist (because it is not tight)
 > tight means that the upper and lower bounds are the same function (g(n)), where g(n) belong to the same asymptotic class (1 < logn < n < nlogn < n^2 < n^3 < ... < 2^n < 3^n)
 
-1) f(n) = 2n^2 + 3n + 5
-   -. Θ(n^2), O(n^2), Ω(n^2)
-2) f(n) = 3nlogn + 5n + 2
-   -. Θ(nlogn), O(nlogn), Ω(nlogn)
-3) f(n) = 2n*sqrt(n) + 3n + 5
-   -. O(n^2), o(n^2), Ω(n), ω(n) (no Θ exist, because it is not tight)
+1. `f(n) = 2n^2 + 3n + 5`
+   - Θ(n^2), O(n^2), Ω(n^2)
+2. `f(n) = 3nlogn + 5n + 2`
+   - Θ(nlogn), O(nlogn), Ω(nlogn)
+3. `f(n) = 2n*sqrt(n) + 3n + 5`
+   - O(n^2), o(n^2), Ω(n), ω(n) (no Θ exist, because it is not tight)
 
 > Usually we specify O(..) and Ω(..) with the tightest bound, but mathematically there can be multiple valid answers.
-1) f(n) = 2n+ 3
-   -. Θ(n), [O(n), O(n^2), O(n^3),...], [Ω(n), Ω(logn), Ω(1)], [o(n^2), o(n^3),...], [ω(logn), ω(1)]
-   -. because, [f(n) = 2n + 3 <= 5n <= 5n^2 <= ...] and [f(n) = 2n + 3 >= n >= logn >= 1]
-2) f(n) = n!
-   -. 1x1x1x..1x1 (n times) <= n! <= n x n x n x ... x n (n times)
-   -. 1 <= f(n) <= n^n
-   -. ω(1), Ω(1), O(n^n), o(n^n) (no Θ exist, because it is not tight)
-3) Linear Search
-   -. Best Case: Θ(1), O(1), Ω(1)
-   -. Average Case: Θ(n), O(n), Ω(n)
-   -. Worst Case: Θ(n), O(n), Ω(n)
+
+1. `f(n) = 2n + 3`
+   - Θ(n), [O(n), O(n^2), O(n^3),...], [Ω(n), Ω(logn), Ω(1)], [o(n^2), o(n^3),...], [ω(logn), ω(1)]
+   - because, [f(n) = 2n + 3 <= 5n <= 5n^2 <= ...] and [f(n) = 2n + 3 >= n >= logn >= 1]
+2. `f(n) = n!`
+   - 1x1x1x..1x1 (n times) <= n! <= n x n x n x ... x n (n times)
+   - 1 <= f(n) <= n^n
+   - ω(1), Ω(1), O(n^n), o(n^n) (no Θ exist, because it is not tight)
+3. Linear Search
+   - Best Case: Θ(1), O(1), Ω(1)
+   - Average Case: Θ(n), O(n), Ω(n)
+   - Worst Case: Θ(n), O(n), Ω(n)
 
 ## Master Theorem (for solving recurrence Division Function)
-T(n) = aT(n/b) + f(n), where f(n) = Θ(n^k * (logn)^p)
--. aT(n/b) -> log_b(a) 
--. n^k -> k
-if(log_b(a) > k)
-  T(n) = Θ(n^log_b(a))
-elif(log_b(a) == k)
-  T(n) = Θ(f(n) * logn)
-elif(log_b(a) < k)
-  T(n) = Θ(f(n))
 
-ex) T(n) = 2T(n/2) + n  -> O(nlogn)
-ex) T(n) = T(n/2) + 1 -> O(logn)
-ex) T(n) = T(n/2) + nlogn -> O(nlogn)
-ex) T(n) = 2T(n/2) + 1  -> O(n)
-ex) T(n) = 4T(n/2) + 1  -> O(n^2)
-ex) T(n) = 2T(n/2) + n^2 -> O(n^2)
-ex) T(n) = 2T(n/2) + n -> O(nlogn)
-ex) T(n) = 9T(n/3) + 1 -> O(n^2)
-ex) T(n) = 8T(n/2) + 1 -> O(n^3)
-ex) T(n) = 4T(n/2) + n -> O(n^2)
-ex) T(n) = T(n/2) + n -> O(n)
-ex) T(n) = 4T(n/2) + n^2*logn -> O(n^2*logn*logn)
+```
+T(n) = aT(n/b) + f(n),  where f(n) = Θ(n^k * (logn)^p)
+
+- aT(n/b)  ->  compare log_b(a)  vs  k  (from n^k)
+
+if   log_b(a) > k  :  T(n) = Θ(n^log_b(a))
+elif log_b(a) == k :  T(n) = Θ(f(n) * logn)
+elif log_b(a) < k  :  T(n) = Θ(f(n))
+```
+
+| Recurrence | Result |
+| --- | --- |
+| T(n) = 2T(n/2) + n | O(nlogn) |
+| T(n) = T(n/2) + 1 | O(logn) |
+| T(n) = T(n/2) + nlogn | O(nlogn) |
+| T(n) = 2T(n/2) + 1 | O(n) |
+| T(n) = 4T(n/2) + 1 | O(n^2) |
+| T(n) = 2T(n/2) + n^2 | O(n^2) |
+| T(n) = 2T(n/2) + n | O(nlogn) |
+| T(n) = 9T(n/3) + 1 | O(n^2) |
+| T(n) = 8T(n/2) + 1 | O(n^3) |
+| T(n) = 4T(n/2) + n | O(n^2) |
+| T(n) = T(n/2) + n | O(n) |
+| T(n) = 4T(n/2) + n^2*logn | O(n^2*logn*logn) |
 
 ## Q&A
 > Q1 : In a depth-first traversal of a graph G with n vertices, k edges are marked as tree edges. The number of connected components in G is ?
@@ -223,7 +227,7 @@ Algorithm Greedy(A,n)
    > Consider previous decisions and their outcomes to make the current decision
    > Try all possible decisions and choose the best one based on the results of subproblems.
      1) Memoization (Top-Down) : Store the results of expensive function calls and return the cached result when the same inputs occur again.
-     2) Recursion (Bottom-Up) : Solve the problem by solving smaller subproblems first and using their results to build up the solution to the original problem.
+     2) Recursion (Top-Down) : Solve the problem by breaking it into smaller subproblems recursively, solving each subproblem and combining their results.
      3) Tabulation (Bottom-Up) : Fill a table in a systematic way to solve the problem iteratively.
      -. Normally start from recursive approach, then add memoization to optimize it, and finally convert it to tabulation for further optimization.
      -. Tabulation requires additional mathematical formula to determine the order of filling the table, while memoization does not require it.
@@ -236,18 +240,34 @@ Algorithm Greedy(A,n)
    > Sudoku Solver : Given a partially filled 9x9 grid, fill the empty cells so that each row, column, and 3x3 subgrid contains all digits from 1 to 9.
    > Rat in a Maze : Given a maze represented as a 2D grid, find a path from the start point to the end point, moving only in four directions (up, down, left, right) and avoiding obstacles.
    > N-Queens Problem : Place N queens on an N×N chessboard so that no two queens threaten each other.
-
+```
+Algorithm Backtrack(A, solution)
+{
+    if(solution is complete)
+        return solution
+    for each candidate x in A
+    {
+        if(x is feasible) // satisfies constraints
+        {
+            solution = solution ∪ {x}
+            result = Backtrack(A, solution)
+            if(result != null)
+                return result
+            solution = solution \ {x} // backtrack (undo the choice)
+        }
+    }
+    return null // no solution found
+}
+```
 
 ## Loops vs Recursion
 > We can convert any recursive function into an iterative one using loops, and vice versa. 
 > Many mathematical problems often can be solved using recursion easily, but it may takes too much stack space.
 > If the stack space is a concern, we can convert the recursive function into an iterative one using loops.
 > If the problem doesn't take too much stack space, we can use recursion for better readability and maintainability.
---- | ---
-Loops | Recursion
---- | ---
-Programming | Mathematics
-Ascending | Ascending(calling, Before function call)/Descending(Returning, After function call)
-Table | Tree
-No Additional space for function calls | Additional stack space for function calls
---- | ---
+| Loops | Recursion |
+| --- | --- |
+| Programming | Mathematics |
+| Ascending | Ascending(calling, Before function call)/Descending(Returning, After function call) |
+| Table | Tree |
+| No Additional space for function calls | Additional stack space for function calls |
