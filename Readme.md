@@ -91,21 +91,6 @@ Selects a pivot, partitions the array so that elements smaller than the pivot go
 
 ---
 
-### 7. Shell Sort
-An improved version of Insertion Sort. It first compares and swaps elements that are far apart to roughly sort the data, then progressively reduces the gap and performs Insertion Sort. Performance varies depending on the gap sequence.
-
-| Case | Time Complexity | Description |
-|------|----------------|-------------|
-| Best | $O(N \log N)$ | Depends on gap sequence |
-| Average | $O(N^{1.25})$ ~ $O(N^{1.5})$ | Depends on gap sequence |
-| Worst | $O(N^2)$ | With basic gap sequence (N/2, N/4, ...) |
-
-- Space: $O(1)$ (in-place)
-- **Unstable** sort
-- In-place like Quick Sort, no additional memory required
-
----
-
 ## Index Based (Non-Comparison)
 > Not comparison-based, so they can surpass the $O(N \log N)$ lower bound.
 > Elements must be **non-negative integers**, and memory usage depends on the maximum value $M$.
@@ -137,21 +122,6 @@ Similar to Count Sort, but uses a Linked List (bucket) at each index. Elements w
 - Space: $O(N + M)$ (buckets + nodes)
 - **Stable** sort
 - A general Bucket Sort variant evenly divides the range and sorts each bucket individually
-
----
-
-### 3. Radix Sort
-An extension of Bucket Sort that repeatedly applies Bucket Sort for each digit position (ones, tens, hundreds, ...). Since it always uses only 10 buckets (0–9), there is no memory waste caused by $M$.
-
-| Case | Time Complexity | Description |
-|------|----------------|-------------|
-| Best | $O(d \cdot N)$ | |
-| Average | $O(d \cdot N)$ | |
-| Worst | $O(d \cdot N)$ | $d$: number of digits (e.g., $d=4$ for 4-digit numbers) |
-
-- Space: $O(N + 10)$ → $O(N)$ (10 buckets + nodes)
-- **Stable** sort
-- Effectively $O(N)$ when $d$ is constant; more memory-efficient than Count/Bucket Sort
 
 ---
 
@@ -253,9 +223,9 @@ An extension of Bucket Sort that repeatedly applies Bucket Sort for each digit p
 > - If f(n) = **o**(g(n)), then f(n) grows strictly slower than g(n). `f(n) < c*g(n)` for any constant c > 0 and sufficiently large n.
 > - If f(n) = **ω**(g(n)), then f(n) grows strictly faster than g(n). `f(n) > c*g(n)` for any constant c > 0 and sufficiently large n.
 
-> if Θ(g(n)) exists, O(..) and Ω(..) must also exist with the exact same function g(n), but not for o(..) and ω(..).
-> if O(..) and Ω(..) exist with different functions, Θ(..) cannot exist (because it is not tight)
-> tight means that the upper and lower bounds are the same function (g(n)), where g(n) belong to the same asymptotic class (1 < logn < n < nlogn < n^2 < n^3 < ... < 2^n < 3^n)
+> - if Θ(g(n)) exists, O(..) and Ω(..) must also exist with the exact same function g(n), but not for o(..) and ω(..).
+> - if O(..) and Ω(..) exist with different functions, Θ(..) cannot exist (because it is not tight)
+> - tight means that the upper and lower bounds are the same function (g(n)), where g(n) belong to the same asymptotic class (1 < logn < n < nlogn < n^2 < n^3 < ... < 2^n < 3^n)
 
 1. `f(n) = 2n^2 + 3n + 5`
    - Θ(n^2), O(n^2), Ω(n^2)
@@ -305,25 +275,11 @@ elif log_b(a) < k  :  T(n) = Θ(f(n))
 | T(n) = T(n/2) + n | O(n) |
 | T(n) = 4T(n/2) + n^2*logn | O(n^2*logn*logn) |
 
-## Q&A
-> Q1 : In a depth-first traversal of a graph G with n vertices, k edges are marked as tree edges. The number of connected components in G is ?
-> A1 : n-k
----
-> Q2 : Let G be a directed graph whose vertex set is the set of numbers from 1 to 100. There is an edge from a vertex i to a vertex j iff either j = i + 1 or j = 3i. The minimum number of edges in a path in G from vertex 1 to  vertex 100 is ?
-> A2 : 7
----
-> Q3 : Let T be a depth first search tree in a undirected graph G. Vertices u and v are leaves of this tree T. The degrees of both u and v in G are at least 2. Which one of the following statements is true?
-> A3 : There must exist a cycle in G containing u and all its neighbours in G
----
-> Q4 : What is the largest integer m such that every simple connected graph with n vertices and n edges contains at least m different spanning trees?
-> A4 : 3
----
-
 ## Algorithm Strategies
 1. **Divide and Conquer (DAC)** : Divide the problem into smaller subproblems, solve each subproblem independently, and then combine the solutions to solve the original problem.
-   > binary search
-   > merge sort
-   > strassen's matrix multiplication
+- binary search
+- merge sort
+- strassen's matrix multiplication
 ```
 Algorithm DAC(A, n)
 {
@@ -340,15 +296,15 @@ Algorithm DAC(A, n)
 ```
 
 2. **Greedy Method** : Make the locally optimal choice at each stage with the hope of finding a global optimum.
-   > Used for optimization problems (e.g., finding the minimum spanning tree, shortest path)
-   > there are constraints and objectives (usually minimizing or maximizing) that need to be satisfied
-   > MST (Kruskal's, Prim's)
-     1) Spanning Tree : N vertices, N-1 edges, no cycle
-     2) Minimum Spanning Tree : Spanning tree with the minimum total edge weight
-     3) Kruskal's Algorithm : Sort edges by weight and add them one by one to the MST, skipping those that would form a cycle.
-     4) Prim's Algorithm : Start from an arbitrary vertex and grow the MST by adding the smallest edge that connects a vertex in the MST to a vertex outside the MST.
-   > Dijkstra's Algorithm : Find the shortest path from a source vertex to all other vertices in a graph with non-negative edge weights.
-   > Huffman Coding : A lossless data compression algorithm that assigns variable-length codes to characters based on their frequencies. More frequent characters get shorter codes.
+- Used for optimization problems (e.g., finding the minimum spanning tree, shortest path)
+- there are constraints and objectives (usually minimizing or maximizing) that need to be satisfied
+- MST (Kruskal's, Prim's)
+  1) Spanning Tree : N vertices, N-1 edges, no cycle
+  2) Minimum Spanning Tree : Spanning tree with the minimum total edge weight
+  3) Kruskal's Algorithm : Sort edges by weight and add them one by one to the MST, skipping those that would form a cycle.
+  4) Prim's Algorithm : Start from an arbitrary vertex and grow the MST by adding the smallest edge that connects a vertex in the MST to a vertex outside the MST.
+- Dijkstra's Algorithm : Find the shortest path from a source vertex to all other vertices in a graph with non-negative edge weights.
+- Huffman Coding : A lossless data compression algorithm that assigns variable-length codes to characters based on their frequencies. More frequent characters get shorter codes.
 ```
 Algorithm Greedy(A,n)
 {
@@ -362,6 +318,53 @@ Algorithm Greedy(A,n)
     return solution
 }
 ```
+
+3. **Dynamic Programming** : Break the problem into overlapping subproblems, solve each subproblem just once, and store their solutions.
+- Used for optimization problems where `only` one optimal solution is needed.
+- there are constraints and objectives (usually minimizing or maximizing) that need to be satisfied
+- Consider previous decisions and their outcomes to make the current decision
+- Try all possible decisions and choose the best one based on the results of subproblems.
+  1) Memoization (Top-Down) : Store the results of expensive function calls and return the cached result when the same inputs occur again.
+  2) Recursion (Top-Down) : Solve the problem by breaking it into smaller subproblems recursively, solving each subproblem and combining their results.
+  3) Tabulation (Bottom-Up) : Fill a table in a systematic way to solve the problem iteratively.
+  - Normally start from recursive approach, then add memoization to optimize it, and finally convert it to tabulation for further optimization.
+  - Tabulation requires additional mathematical formula to determine the order of filling the table, while memoization does not require it.
+- Zero-One Knapsack Problem : Given weights and values of n items, put these items in a knapsack of capacity W to get the maximum total value in the knapsack. (Each item can either be included or excluded)
+- Longest Common Subsequence (LCS) : Given two strings A and B, find the length of the longest subsequence that is common to both strings. A subsequence is a sequence that appears in the same relative order but not necessarily contiguous.
+
+ 
+4. **Backtracking** : Build a solution incrementally, abandoning solutions that fail to satisfy the constraints of the problem.
+- Try all possible combinations of decisions and backtrack(go back to previous state) when there is no combination satisfying the constraints.
+- There are constraints that need to be satisfied (e.g., no two queens threaten each other in the N-Queens problem)
+- Sudoku Solver : Given a partially filled 9x9 grid, fill the empty cells so that each row, column, and 3x3 subgrid contains all digits from 1 to 9.
+- Rat in a Maze : Given a maze represented as a 2D grid, find a path from the start point to the end point, moving only in four directions (up, down, left, right) and avoiding obstacles.
+- N-Queens Problem : Place N queens on an N×N chessboard so that no two queens threaten each other.
+```
+Algorithm Backtrack(A, solution)
+{
+    if(solution is complete)
+        return solution
+    for each candidate x in A
+    {
+        if(x is feasible) // satisfies constraints
+        {
+            solution = solution ∪ {x}
+            result = Backtrack(A, solution)
+            if(result != null)
+                return result
+            solution = solution \ {x} // backtrack (undo the choice)
+        }
+    }
+    return null // no solution found
+}
+```
+
+## Loops vs Recursion
+- We can convert any recursive function into an iterative one using loops, and vice versa. 
+- Many mathematical problems often can be solved using recursion easily, but it may takes too much stack space.
+- If the stack space is a concern, we can convert the recursive function into an iterative one using loops.
+- If the problem doesn't take too much stack space, we can use recursion for better readability and maintainability.
+
 
 ### Huffman Coding
 
@@ -423,19 +426,7 @@ Codes:
 - The Huffman tree is **not unique** — different trees can produce different codes with the **same total bit cost**.
 - It is widely used in file compression formats like **ZIP, GZIP, JPEG, MP3**.
    
-3. **Dynamic Programming** : Break the problem into overlapping subproblems, solve each subproblem just once, and store their solutions.
-   > Used for optimization problems where `only` one optimal solution is needed.
-   > there are constraints and objectives (usually minimizing or maximizing) that need to be satisfied
-   > Consider previous decisions and their outcomes to make the current decision
-   > Try all possible decisions and choose the best one based on the results of subproblems.
-     1) Memoization (Top-Down) : Store the results of expensive function calls and return the cached result when the same inputs occur again.
-     2) Recursion (Top-Down) : Solve the problem by breaking it into smaller subproblems recursively, solving each subproblem and combining their results.
-     3) Tabulation (Bottom-Up) : Fill a table in a systematic way to solve the problem iteratively.
-     -. Normally start from recursive approach, then add memoization to optimize it, and finally convert it to tabulation for further optimization.
-     -. Tabulation requires additional mathematical formula to determine the order of filling the table, while memoization does not require it.
-   > Zero-One Knapsack Problem : Given weights and values of n items, put these items in a knapsack of capacity W to get the maximum total value in the knapsack. (Each item can either be included or excluded)
-   > Longest Common Subsequence (LCS) : Given two strings A and B, find the length of the longest subsequence that is common to both strings. A subsequence is a sequence that appears in the same relative order but not necessarily contiguous.
-
+   
 ### Longest Common Subsequence (LCS)
 
 **Problem:** Given two strings `A` and `B`, find the length of the longest subsequence common to both.
@@ -478,38 +469,3 @@ Codes:
 | Pure Recursion | O(2^n) | O(n) stack | Exponential, impractical for large inputs |
 | Recursion + Memoization | O(n*m) | O(n*m) + stack | Top-down, easy to implement from recursion |
 | Tabulation | O(n*m) | O(n*m) | Bottom-up, no stack overhead, most efficient |
-   
-
-4. **Backtracking** : Build a solution incrementally, abandoning solutions that fail to satisfy the constraints of the problem.
-   > Try all possible combinations of decisions and backtrack(go back to previous state) when there is no combination satisfying the constraints.
-   > There are constraints that need to be satisfied (e.g., no two queens threaten each other in the N-Queens problem)
-   > Sudoku Solver : Given a partially filled 9x9 grid, fill the empty cells so that each row, column, and 3x3 subgrid contains all digits from 1 to 9.
-   > Rat in a Maze : Given a maze represented as a 2D grid, find a path from the start point to the end point, moving only in four directions (up, down, left, right) and avoiding obstacles.
-   > N-Queens Problem : Place N queens on an N×N chessboard so that no two queens threaten each other.
-```
-Algorithm Backtrack(A, solution)
-{
-    if(solution is complete)
-        return solution
-    for each candidate x in A
-    {
-        if(x is feasible) // satisfies constraints
-        {
-            solution = solution ∪ {x}
-            result = Backtrack(A, solution)
-            if(result != null)
-                return result
-            solution = solution \ {x} // backtrack (undo the choice)
-        }
-    }
-    return null // no solution found
-}
-```
-
-## Loops vs Recursion
-> We can convert any recursive function into an iterative one using loops, and vice versa. 
-> Many mathematical problems often can be solved using recursion easily, but it may takes too much stack space.
-> If the stack space is a concern, we can convert the recursive function into an iterative one using loops.
-> If the problem doesn't take too much stack space, we can use recursion for better readability and maintainability.
-
-
