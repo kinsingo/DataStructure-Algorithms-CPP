@@ -207,6 +207,7 @@ Algorithm DAC(A, n)
      3) Kruskal's Algorithm : Sort edges by weight and add them one by one to the MST, skipping those that would form a cycle.
      4) Prim's Algorithm : Start from an arbitrary vertex and grow the MST by adding the smallest edge that connects a vertex in the MST to a vertex outside the MST.
    > Dijkstra's Algorithm : Find the shortest path from a source vertex to all other vertices in a graph with non-negative edge weights.
+   > Huffman Coding : A lossless data compression algorithm that assigns variable-length codes to characters based on their frequencies. More frequent characters get shorter codes.
 ```
 Algorithm Greedy(A,n)
 {
@@ -220,6 +221,66 @@ Algorithm Greedy(A,n)
     return solution
 }
 ```
+
+### Huffman Coding
+
+**Problem:** Given a set of characters and their frequencies, find an optimal prefix-free binary code that minimizes the total number of bits used to encode the message.
+- A **prefix-free code** means no code is a prefix of another code → unambiguous decoding.
+- **Greedy choice:** Always merge the two nodes with the **smallest frequencies** first.
+- Time Complexity: **O(n*logn)** (due to min-heap operations)
+
+**Algorithm:**
+1. Create a **min-heap** (priority queue) with all characters and their frequencies.
+2. While the heap has more than one node:
+   1) Extract the two nodes with the **minimum frequency** (`left`, `right`).
+   2) Create a new internal node with frequency = `left.freq + right.freq`.
+   3) Set `left` as the left child and `right` as the right child.
+   4) Insert the new node back into the heap.
+3. The remaining node is the **root** of the Huffman Tree.
+4. Traverse the tree: left edge = `0`, right edge = `1` → each leaf's path = its code.
+
+**Example:** `"aabbbbcccddddddee"` → frequencies: `a:2, b:4, c:3, d:6, e:2`
+```
+Step 1: Merge a(2) + e(2) = [ae](4)
+Step 2: Merge c(3) + b(4) = [cb](7)       (or [ae](4), pick two smallest)
+Step 3: Merge [ae](4) + d(6) = [aed](10)  (adjust based on actual min-heap order)
+...
+
+Final Huffman Tree (one possible result):
+
+            (17)
+           /    \
+        (7)      (10)
+       /   \    /    \
+     c(3) b(4) [ae](4) d(6)
+               /   \
+             a(2)  e(2)
+
+Codes:
+  c = 00
+  b = 01
+  a = 100
+  e = 101
+  d = 11
+```
+
+**Fixed-Length vs Huffman Coding:**
+| Character | Freq | Fixed (3-bit) | Huffman Code | Huffman Bits |
+| --- | --- | --- | --- | --- |
+| a | 2 | 000 | 100 | 2 × 3 = 6 |
+| b | 4 | 001 | 01 | 4 × 2 = 8 |
+| c | 3 | 010 | 00 | 3 × 2 = 6 |
+| d | 6 | 011 | 11 | 6 × 2 = 12 |
+| e | 2 | 100 | 101 | 2 × 3 = 6 |
+| **Total** | **17** | | | **38 bits** |
+
+> Fixed-length: 17 × 3 = **51 bits** → Huffman: **38 bits** (25.5% savings)
+
+**Key Properties:**
+- Huffman coding produces an **optimal prefix-free code** for a given set of character frequencies.
+- Characters with **higher frequency** get **shorter codes**, and characters with **lower frequency** get **longer codes**.
+- The Huffman tree is **not unique** — different trees can produce different codes with the **same total bit cost**.
+- It is widely used in file compression formats like **ZIP, GZIP, JPEG, MP3**.
    
 3. **Dynamic Programming** : Break the problem into overlapping subproblems, solve each subproblem just once, and store their solutions.
    > Used for optimization problems where `only` one optimal solution is needed.
@@ -232,6 +293,50 @@ Algorithm Greedy(A,n)
      -. Normally start from recursive approach, then add memoization to optimize it, and finally convert it to tabulation for further optimization.
      -. Tabulation requires additional mathematical formula to determine the order of filling the table, while memoization does not require it.
    > Zero-One Knapsack Problem : Given weights and values of n items, put these items in a knapsack of capacity W to get the maximum total value in the knapsack. (Each item can either be included or excluded)
+   > Longest Common Subsequence (LCS) : Given two strings A and B, find the length of the longest subsequence that is common to both strings. A subsequence is a sequence that appears in the same relative order but not necessarily contiguous.
+
+### Longest Common Subsequence (LCS)
+
+**Problem:** Given two strings `A` and `B`, find the length of the longest subsequence common to both.
+- A **subsequence** is derived by deleting zero or more characters without changing the relative order.
+- Example: `A = "abcdefg"`, `B = "dbcfmg"` → LCS = `"bcfg"` (length **4**)
+
+**Approach 1: Pure Recursion — O(2^n)**
+- Compare characters at positions `i` (in A) and `j` (in B):
+  - If `A[i] == B[j]`: match found → move both pointers forward → `1 + LCS(i+1, j+1)`
+  - If `A[i] != B[j]`: try both options → `max(LCS(i+1, j), LCS(i, j+1))`
+- Exponential time due to overlapping subproblems being recomputed.
+
+**Approach 2: Recursion + Memoization (Top-Down) — O(n*m)**
+- Same recursive logic, but store results in a table `T[i][j]` to avoid recomputation.
+- Can use a `HashMap<string, int>` with key `"i#j"`, or a 2D vector `T[n][m]` initialized to `-1`.
+
+**Approach 3: Tabulation (Bottom-Up) — O(n*m)**
+- Build a 2D table `T[n+1][m+1]` iteratively (no recursion, no stack overhead).
+- Fill rule:
+  - If `A[i-1] == B[j-1]` → `T[i][j] = T[i-1][j-1] + 1`  (diagonal + 1)
+  - Else → `T[i][j] = max(T[i-1][j], T[i][j-1])`  (max of top, left)
+
+**Tabulation Table Example:** `A = "abcdefg"`, `B = "dbcfmg"`
+```
+      ""  d  b  c  f  m  g
+  ""   0  0  0  0  0  0  0
+   a   0  0  0  0  0  0  0
+   b   0  0  1  1  1  1  1
+   c   0  0  1  2  2  2  2
+   d   0  1  1  2  2  2  2
+   e   0  1  1  2  2  2  2
+   f   0  1  1  2  3  3  3
+   g   0  1  1  2  3  3  4
+```
+> Result: `T[7][6] = 4` → LCS length is **4**
+
+**Summary:**
+| Method | Time | Space | Notes |
+| --- | --- | --- | --- |
+| Pure Recursion | O(2^n) | O(n) stack | Exponential, impractical for large inputs |
+| Recursion + Memoization | O(n*m) | O(n*m) + stack | Top-down, easy to implement from recursion |
+| Tabulation | O(n*m) | O(n*m) | Bottom-up, no stack overhead, most efficient |
    
 
 4. **Backtracking** : Build a solution incrementally, abandoning solutions that fail to satisfy the constraints of the problem.
@@ -265,3 +370,5 @@ Algorithm Backtrack(A, solution)
 > Many mathematical problems often can be solved using recursion easily, but it may takes too much stack space.
 > If the stack space is a concern, we can convert the recursive function into an iterative one using loops.
 > If the problem doesn't take too much stack space, we can use recursion for better readability and maintainability.
+
+
