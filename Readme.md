@@ -155,21 +155,6 @@ An extension of Bucket Sort that repeatedly applies Bucket Sort for each digit p
 
 ---
 
-## Summary
-
-| Algorithm | Best | Average | Worst | Space | Stable | Notes |
-|-----------|------|---------|-------|-------|--------|-------|
-| Bubble Sort | $O(N)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | Yes | Early termination optimization |
-| Insertion Sort | $O(N)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | Yes | Efficient on nearly sorted data |
-| Selection Sort | $O(N^2)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | No | Always same number of comparisons |
-| Heap Sort | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(1)$ | No | Guarantees $O(N \log N)$ worst case |
-| Merge Sort | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(N)$ | Yes | Requires additional memory |
-| Quick Sort | $O(N \log N)$ | $O(N \log N)$ | $O(N^2)$ | $O(\log N)$ | No | Fastest on average in practice |
-| Shell Sort | $O(N \log N)$ | $O(N^{1.25})$ | $O(N^2)$ | $O(1)$ | No | Performance varies by gap sequence |
-| Count Sort | $O(N+M)$ | $O(N+M)$ | $O(N+M)$ | $O(M)$ | Yes | Inefficient when $M$ is large |
-| Bucket Sort | $O(N+M)$ | $O(N+M)$ | $O(N+M)$ | $O(N+M)$ | Yes | Similar to Count Sort |
-| Radix Sort | $O(dN)$ | $O(dN)$ | $O(dN)$ | $O(N)$ | Yes | $d$: number of digits |
-
 # Graph Theory (Network Flow)
 
 ## Types of Graphs
