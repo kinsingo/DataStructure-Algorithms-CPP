@@ -1,18 +1,174 @@
 # Sorting Algorithms
 
 ## Comparison Based
-1. Bubble Sort : O(N^2)
-2. Insertion Sort : O(N^2)
-3. Selection Sort : O(N^2)
----
-4. Heap Sort : O(N*logN)
-5. Merge Sort : O(N*logN)
-6. Quick Sort : O(N*logN) average, O(N^2) worst
 
-## Index Based
-1. Count Sort : O(N)
-2. Bucket/Bin Sort : O(N)
-3. Radix Sort : O(N) 
+### 1. Bubble Sort
+Repeatedly compares adjacent elements and swaps them if they are in the wrong order. After each pass, the largest (or smallest) element "bubbles" up to the end of the array. As an optimization, if no swaps occur during a pass, the array is already sorted and the algorithm can terminate early.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N)$ | Already sorted (terminates in 1 pass with no swaps) |
+| Average | $O(N^2)$ | |
+| Worst | $O(N^2)$ | Reverse sorted |
+
+- Space: $O(1)$ (in-place)
+- **Stable** sort
+
+---
+
+### 2. Insertion Sort
+Divides the array into a sorted and an unsorted portion. Takes the first element from the unsorted portion and inserts it into its correct position within the sorted portion. This is the same approach as sorting a hand of playing cards.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N)$ | Already sorted (only comparisons, no shifts) |
+| Average | $O(N^2)$ | |
+| Worst | $O(N^2)$ | Reverse sorted |
+
+- Space: $O(1)$ (in-place)
+- **Stable** sort
+- Very efficient when data is nearly sorted
+
+---
+
+### 3. Selection Sort
+Finds the minimum (or maximum) element in the unsorted portion and swaps it with the first unsorted element. This repeats until the entire array is sorted. Always performs exactly $\frac{N(N-1)}{2}$ comparisons regardless of input.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N^2)$ | Always the same regardless of input |
+| Average | $O(N^2)$ | |
+| Worst | $O(N^2)$ | Always the same regardless of input |
+
+- Space: $O(1)$ (in-place)
+- **Unstable** sort (relative order of equal elements may change)
+
+---
+
+### 4. Heap Sort
+Builds a Max Heap (or Min Heap) from the array, then repeatedly swaps the root (max/min value) with the last element and reduces the heap size by 1, re-heapifying each time. Building the heap takes $O(N)$, and extracting all elements with heapify takes $O(N \log N)$.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N \log N)$ | |
+| Average | $O(N \log N)$ | |
+| Worst | $O(N \log N)$ | Always the same regardless of input |
+
+- Space: $O(1)$ (in-place)
+- **Unstable** sort
+- Guarantees $O(N \log N)$ even in the worst case
+
+---
+
+### 5. Merge Sort
+Recursively divides the array in half (Divide), then merges the two sorted halves back together (Merge). Since it always splits evenly in half, the time complexity is $O(N \log N)$ regardless of input. However, it requires an additional array during the merge step.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N \log N)$ | |
+| Average | $O(N \log N)$ | |
+| Worst | $O(N \log N)$ | Always the same regardless of input |
+
+- Space: $O(N)$ (additional array needed for merging)
+- **Stable** sort
+- Consistent performance compared to Quick Sort, but higher memory usage
+
+---
+
+### 6. Quick Sort
+Selects a pivot, partitions the array so that elements smaller than the pivot go left and larger ones go right, then recursively sorts each partition. Performance depends heavily on pivot selection.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N \log N)$ | Pivot is always the median |
+| Average | $O(N \log N)$ | |
+| Worst | $O(N^2)$ | Already sorted array with first/last element as pivot |
+
+- Space: $O(\log N)$ (recursion call stack)
+- **Unstable** sort
+- In-place sorting, no additional array needed — more memory-efficient than Merge Sort
+- On average, the fastest comparison-based sort in practice
+
+---
+
+### 7. Shell Sort
+An improved version of Insertion Sort. It first compares and swaps elements that are far apart to roughly sort the data, then progressively reduces the gap and performs Insertion Sort. Performance varies depending on the gap sequence.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N \log N)$ | Depends on gap sequence |
+| Average | $O(N^{1.25})$ ~ $O(N^{1.5})$ | Depends on gap sequence |
+| Worst | $O(N^2)$ | With basic gap sequence (N/2, N/4, ...) |
+
+- Space: $O(1)$ (in-place)
+- **Unstable** sort
+- In-place like Quick Sort, no additional memory required
+
+---
+
+## Index Based (Non-Comparison)
+> Not comparison-based, so they can surpass the $O(N \log N)$ lower bound.
+> Elements must be **non-negative integers**, and memory usage depends on the maximum value $M$.
+
+### 1. Count Sort
+Records the frequency of each value in a counting array, then reconstructs the original array by iterating through the counting array. Requires an array of size $M+1$ when values range from $0$ to $M$.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N + M)$ | |
+| Average | $O(N + M)$ | |
+| Worst | $O(N + M)$ | $M$: maximum value |
+
+- Space: $O(M)$ (counting array)
+- **Stable** sort (depending on implementation)
+- Wasteful in time/memory when $M$ is much larger than $N$
+
+---
+
+### 2. Bucket/Bin Sort
+Similar to Count Sort, but uses a Linked List (bucket) at each index. Elements with the same value are stored in the same bucket as a linked list. Essentially the same principle as Count Sort.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(N + M)$ | |
+| Average | $O(N + M)$ | |
+| Worst | $O(N + M)$ | $M$: maximum value (number of buckets) |
+
+- Space: $O(N + M)$ (buckets + nodes)
+- **Stable** sort
+- A general Bucket Sort variant evenly divides the range and sorts each bucket individually
+
+---
+
+### 3. Radix Sort
+An extension of Bucket Sort that repeatedly applies Bucket Sort for each digit position (ones, tens, hundreds, ...). Since it always uses only 10 buckets (0–9), there is no memory waste caused by $M$.
+
+| Case | Time Complexity | Description |
+|------|----------------|-------------|
+| Best | $O(d \cdot N)$ | |
+| Average | $O(d \cdot N)$ | |
+| Worst | $O(d \cdot N)$ | $d$: number of digits (e.g., $d=4$ for 4-digit numbers) |
+
+- Space: $O(N + 10)$ → $O(N)$ (10 buckets + nodes)
+- **Stable** sort
+- Effectively $O(N)$ when $d$ is constant; more memory-efficient than Count/Bucket Sort
+
+---
+
+## Summary
+
+| Algorithm | Best | Average | Worst | Space | Stable | Notes |
+|-----------|------|---------|-------|-------|--------|-------|
+| Bubble Sort | $O(N)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | Yes | Early termination optimization |
+| Insertion Sort | $O(N)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | Yes | Efficient on nearly sorted data |
+| Selection Sort | $O(N^2)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | No | Always same number of comparisons |
+| Heap Sort | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(1)$ | No | Guarantees $O(N \log N)$ worst case |
+| Merge Sort | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(N)$ | Yes | Requires additional memory |
+| Quick Sort | $O(N \log N)$ | $O(N \log N)$ | $O(N^2)$ | $O(\log N)$ | No | Fastest on average in practice |
+| Shell Sort | $O(N \log N)$ | $O(N^{1.25})$ | $O(N^2)$ | $O(1)$ | No | Performance varies by gap sequence |
+| Count Sort | $O(N+M)$ | $O(N+M)$ | $O(N+M)$ | $O(M)$ | Yes | Inefficient when $M$ is large |
+| Bucket Sort | $O(N+M)$ | $O(N+M)$ | $O(N+M)$ | $O(N+M)$ | Yes | Similar to Count Sort |
+| Radix Sort | $O(dN)$ | $O(dN)$ | $O(dN)$ | $O(N)$ | Yes | $d$: number of digits |
 
 # Graph Theory (Network Flow)
 
