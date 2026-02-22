@@ -265,9 +265,3 @@ Algorithm Backtrack(A, solution)
 > Many mathematical problems often can be solved using recursion easily, but it may takes too much stack space.
 > If the stack space is a concern, we can convert the recursive function into an iterative one using loops.
 > If the problem doesn't take too much stack space, we can use recursion for better readability and maintainability.
-| Loops | Recursion |
-| --- | --- |
-| Programming | Mathematics |
-| Ascending | Ascending(calling, Before function call)/Descending(Returning, After function call) |
-| Table | Tree |
-| No Additional space for function calls | Additional stack space for function calls |
