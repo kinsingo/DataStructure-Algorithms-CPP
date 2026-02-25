@@ -469,3 +469,315 @@ Codes:
 | Pure Recursion | O(2^n) | O(n) stack | Exponential, impractical for large inputs |
 | Recursion + Memoization | O(n*m) | O(n*m) + stack | Top-down, easy to implement from recursion |
 | Tabulation | O(n*m) | O(n*m) | Bottom-up, no stack overhead, most efficient |
+
+
+### Heap (Binary Heap)
+
+**Definition:** A Heap is a **Complete Binary Tree** stored as an array, satisfying the heap property.
+- **Complete Binary Tree**: Every level is fully filled except possibly the last, which is filled from left to right. This guarantees the tree height is always $\lfloor \log_2 N \rfloor$.
+- **Max Heap**: Every parent node is **greater than or equal to** its children → Root is the **maximum**.
+- **Min Heap**: Every parent node is **less than or equal to** its children → Root is the **minimum**.
+
+**Array Representation (0-indexed):**
+- Parent of node `i`: $\lfloor (i - 1) / 2 \rfloor$
+- Left child of node `i`: $2i + 1$
+- Right child of node `i`: $2i + 2$
+
+```
+Example Max Heap:        Array: [50, 45, 40, 30, 20, 35, 5, 10]
+                         Index:   0   1   2   3   4   5   6   7
+         50
+       /    \            Parent of index 5 (value 35): (5-1)/2 = 2 (value 40) ✓
+     45      40          Left child of index 1 (value 45): 2*1+1 = 3 (value 30) ✓
+    / \     / \          Right child of index 1 (value 45): 2*1+2 = 4 (value 20) ✓
+   30  20  35   5
+  /
+ 10
+```
+
+---
+
+**Insert — O(log N)**
+
+Add the new element at the **end** of the array (to maintain the complete binary tree property), then **bubble up** (swap with parent) until the heap property is restored.
+
+**Example:** Insert `45` into Max Heap `[50, 30, 40, 10, 20, 35, 5]`
+
+```
+Step 1: Add 45 at the end              Step 2: Bubble up (45 > 10 → swap)
+         50                                      50
+       /    \                                  /    \
+     30      40                              30      40
+    / \     / \                             / \     / \
+   10  20  35   5                          45  20  35   5
+  /                                       /
+ 45                                      10
+
+Step 3: Bubble up (45 > 30 → swap)      Step 4: 45 < 50 → STOP
+         50                              Result: [50, 45, 40, 30, 20, 35, 5, 10]
+       /    \
+     45      40
+    / \     / \
+   30  20  35   5
+  /
+ 10
+```
+
+**Time Complexity:** At most $h$ swaps where $h = \lfloor \log_2 N \rfloor$ → **O(log N)**
+
+---
+
+**Delete (Extract Root) — O(log N)**
+
+Replace the **root** with the **last element** in the array (to maintain the complete binary tree property), remove the last element, then **heapify down** (swap with the larger/smaller child) until the heap property is restored.
+
+**Example:** Delete root from Max Heap `[50, 45, 40, 30, 20, 35, 5, 10]`
+
+```
+Step 1: Replace root with last (10)    Step 2: Heapify down (10 < max(45,40)=45 → swap)
+         10                                      45
+       /    \                                  /    \
+     45      40                              10      40
+    / \     / \                             / \     / \
+   30  20  35   5                          30  20  35   5
+
+Step 3: Heapify down (10 < max(30,20)=30 → swap)    Step 4: 10 has no children → STOP
+         45                                           Result: [45, 30, 40, 10, 20, 35, 5]
+       /    \
+     30      40
+    / \     / \
+   10  20  35   5
+```
+
+**Time Complexity:** At most $h$ swaps where $h = \lfloor \log_2 N \rfloor$ → **O(log N)**
+
+---
+
+**Build Heap — O(N)**
+
+**Naive Approach — O(N log N):** Insert elements one by one. Each insertion costs O(log N), so total = O(N log N).
+
+**Optimized Approach (Heapify) — O(N):** Copy all elements into the array first, then call **Heapify** (sift down) starting from the **last non-leaf node** down to the root.
+
+```
+Last non-leaf node index = ⌊(N - 2) / 2⌋
+
+for i = ⌊(N-2)/2⌋ down to 0:
+    Heapify(i)    // sift down from node i
+```
+
+**Example:** Build Max Heap from `[10, 20, 5, 30, 45, 35, 50, 40]`
+
+```
+Initial (just an array as a tree):     Last non-leaf = (8-2)/2 = 3 (value 30)
+         10
+       /    \
+     20       5
+    /  \    /   \
+   30   45  35   50
+  /
+ 40
+
+Heapify(3): 30 → compare children: 40 → swap    Heapify(2): 5 → compare children: max(35,50)=50 → swap
+         10                                               10
+       /    \                                           /    \
+     20       5                                       20      50
+    /  \    /   \                                    /  \    /   \
+   40   45  35   50                                 40   45  35    5
+  /                                                /
+ 30                                               30
+
+Heapify(1): 20 → compare children: max(40,45)=45 → swap    Heapify(0): 10 → compare children: max(45,50)=50 → swap
+         10                                                          50
+       /    \                                                      /    \
+     45      50                                                  45      10
+    /  \    /   \                                               /  \    /   \
+   40   20  35    5                                            40   20  35    5
+  /                                                           /
+ 30                                                          30
+
+Continue Heapify(0): 10 → compare children: max(35,5)=35 → swap
+         50                          Result: [50, 45, 35, 40, 20, 10, 5, 30]
+       /    \
+     45      35
+    /  \    /   \
+   40   20  10    5
+  /
+ 30
+```
+
+---
+
+**Mathematical Proof: Build Heap is O(N)**
+
+In a complete binary tree with $N$ nodes, the height is $h = \lfloor \log_2 N \rfloor$.
+
+**Key Observation:** The number of nodes at height $k$ (measured from the bottom, where leaves are at height 0) is at most $\lceil N / 2^{k+1} \rceil$. Heapify at a node of height $k$ performs at most $k$ swaps (sifting down $k$ levels).
+
+$$
+T(N) = \sum_{k=0}^{h} \left\lceil \frac{N}{2^{k+1}} \right\rceil \cdot k
+$$
+
+Dropping the ceiling for the upper bound:
+
+$$
+T(N) \leq \sum_{k=0}^{h} \frac{N}{2^{k+1}} \cdot k = \frac{N}{2} \sum_{k=0}^{h} \frac{k}{2^k}
+$$
+
+Now evaluate the infinite series (upper bound since $h$ is finite):
+
+$$
+S = \sum_{k=0}^{\infty} \frac{k}{2^k} = \sum_{k=1}^{\infty} k \cdot x^k \bigg|_{x=\frac{1}{2}}
+$$
+
+Using the known formula $\displaystyle\sum_{k=1}^{\infty} k \cdot x^k = \frac{x}{(1-x)^2}$ for $|x| < 1$:
+
+$$
+S = \frac{\frac{1}{2}}{(1 - \frac{1}{2})^2} = \frac{\frac{1}{2}}{\frac{1}{4}} = 2
+$$
+
+Substituting back:
+
+$$
+T(N) \leq \frac{N}{2} \cdot 2 = N
+$$
+
+$$
+\therefore T(N) = O(N)
+$$
+
+**Intuition:** Most nodes are near the **leaves** and require very little work (0 or 1 swaps), while only a **few nodes near the root** incur $O(\log N)$ cost. Specifically:
+- $\sim N/2$ leaf nodes → 0 swaps each
+- $\sim N/4$ nodes at height 1 → at most 1 swap each
+- $\sim N/8$ nodes at height 2 → at most 2 swaps each
+- ...
+- 1 root node → at most $\log N$ swaps
+
+The exponential decrease in node count outweighs the linear increase in work per node.
+
+**Summary:**
+| Operation | Time Complexity | Description |
+| --- | --- | --- |
+| Insert | O(log N) | Add at end, bubble up |
+| Delete (Extract Root) | O(log N) | Replace root with last, heapify down |
+| Get Min/Max (Peek) | O(1) | Root element |
+| Build Heap (Naive) | O(N log N) | Insert one by one |
+| Build Heap (Heapify) | O(N) | Heapify from last non-leaf to root |
+| Heap Sort | O(N log N) | Build Heap O(N) + N × Delete O(log N) |
+
+
+### Dijkstra's Algorithm (Priority Queue)
+
+**Problem:** Given a weighted graph with **non-negative** edge weights, find the shortest path from a source vertex to all other vertices.
+
+**Key Idea (Greedy):** Always process the **unvisited vertex with the smallest known distance** first. Once a vertex is processed (extracted from the priority queue and marked as visited), its shortest distance is **finalized** — it will never be updated again.
+
+> This greedy property holds **only when all edge weights are non-negative**. For negative weights, use Bellman-Ford.
+
+**Algorithm (Min-Heap / Priority Queue):**
+1. Initialize `dist[source] = 0`, `dist[v] = ∞` for all other vertices.
+2. Push `(0, source)` into a **min-heap** (priority queue ordered by distance).
+3. While the min-heap is not empty:
+   1) Extract the vertex `u` with the **minimum distance** from the heap.
+   2) If `u` is already **visited**, skip it (stale entry).
+   3) Mark `u` as **visited**.
+   4) For each neighbor `v` of `u` with edge weight `w`:
+      - If `dist[u] + w < dist[v]` → update `dist[v] = dist[u] + w`, push `(dist[v], v)` into the heap.
+
+```
+Algorithm Dijkstra(Graph, source):
+    dist[source] = 0
+    for each vertex v ≠ source:
+        dist[v] = ∞
+
+    minHeap.push( (0, source) )
+
+    while minHeap is not empty:
+        (d, u) = minHeap.extractMin()
+
+        if u is visited: continue    // skip stale entries
+        mark u as visited
+
+        for each neighbor (v, w) of u:
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                prev[v] = u
+                minHeap.push( (dist[v], v) )
+```
+
+> **Note on stale entries:** Since we push new `(distance, vertex)` pairs without removing old ones, the heap may contain outdated entries. We skip them by checking if the vertex has already been visited. This is called the **"lazy deletion"** approach — simpler than implementing a decrease-key operation.
+
+---
+
+**Example:** Shortest paths from `A` in the following directed weighted graph.
+
+```
+             A
+            / \
+         3 /   \ 6
+          /     \
+         v   4   v
+         B ----> C
+        /\     / \
+     11/  \4  /8  \ 11
+      /    \ /     \
+     v  +4  vv   2  v
+     E <---  D  ---> G
+      \      |5     /
+       \     v     /
+       9\    F    /2
+         \   |   /
+          \  |1 /
+           \ | /
+            vvv
+             H
+```
+
+**Step-by-step execution:**
+
+| Step | Extract | dist[A] | dist[B] | dist[C] | dist[D] | dist[E] | dist[F] | dist[G] | dist[H] | Action |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Init | — | **0** | ∞ | ∞ | ∞ | ∞ | ∞ | ∞ | ∞ | Push (0,A) |
+| 1 | A(0) | **0** | **3** | **6** | ∞ | ∞ | ∞ | ∞ | ∞ | Relax B=3, C=6 |
+| 2 | B(3) | 0 | **3** | 6 | **7** | **14** | ∞ | ∞ | ∞ | Relax D=7, E=14 (C=7>6 skip) |
+| 3 | C(6) | 0 | 3 | **6** | 7 | 14 | ∞ | **17** | ∞ | Relax G=17 (D=14>7 skip) |
+| 4 | D(7) | 0 | 3 | 6 | **7** | **11** | **12** | **9** | ∞ | Relax E=11, F=12, G=9 |
+| 5 | G(9) | 0 | 3 | 6 | 7 | 11 | 12 | **9** | **11** | Relax H=11 |
+| 6 | E(11) | 0 | 3 | 6 | 7 | **11** | 12 | 9 | 11 | H=20>11 skip |
+| 7 | H(11) | 0 | 3 | 6 | 7 | 11 | 12 | 9 | **11** | No neighbors |
+| 8 | F(12) | 0 | 3 | 6 | 7 | 11 | **12** | 9 | 11 | H=13>11 skip |
+
+**Final shortest distances from A:**
+```
+A:0   B:3   C:6   D:7   E:11   F:12   G:9   H:11
+```
+
+**Shortest path traces (using prev[]):**
+```
+A → B : A → B                    (cost 3)
+A → C : A → C                    (cost 6)
+A → D : A → B → D                (cost 7)
+A → E : A → B → D → E            (cost 11)
+A → F : A → B → D → F            (cost 12)
+A → G : A → B → D → G            (cost 9)
+A → H : A → B → D → G → H        (cost 11)
+```
+
+---
+
+**Time Complexity: O((V + E) · log V)**
+
+| Operation | Count | Cost per op | Total |
+| --- | --- | --- | --- |
+| Extract-Min | V | O(log V) | O(V log V) |
+| Push (Insert) | at most E | O(log V) | O(E log V) |
+| **Total** | | | **O((V + E) log V)** |
+
+> With a Fibonacci Heap, decrease-key runs in O(1) amortized, giving O(V log V + E). But in practice, binary heap with lazy deletion is simpler and often faster due to lower constant factors.
+
+**Comparison with other shortest path algorithms:**
+| Algorithm | Time | Negative Weights | Cycles | Notes |
+| --- | --- | --- | --- | --- |
+| Dijkstra (Binary Heap) | O((V+E) log V) | ✗ | ✓ | Greedy, fastest for non-negative weights |
+| Bellman-Ford | O(V·E) | ✓ | ✓ (detects negative cycles) | Slower but handles negative weights |
+| DAG Shortest Path | O(V+E) | ✓ | ✗ (DAG only) | Topological sort + relaxation |
