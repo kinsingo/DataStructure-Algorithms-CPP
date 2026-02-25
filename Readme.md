@@ -781,3 +781,70 @@ A → H : A → B → D → G → H        (cost 11)
 | Dijkstra (Binary Heap) | O((V+E) log V) | ✗ | ✓ | Greedy, fastest for non-negative weights |
 | Bellman-Ford | O(V·E) | ✓ | ✓ (detects negative cycles) | Slower but handles negative weights |
 | DAG Shortest Path | O(V+E) | ✓ | ✗ (DAG only) | Topological sort + relaxation |
+
+
+---
+
+# Self-Balancing Binary Search Trees
+
+BST는 정렬된 순서로 삽입하면 편향 트리(linked list)가 되어 $O(N)$이 된다. Self-balancing BST는 자동으로 균형을 유지하여 $O(\log N)$을 보장한다.
+
+---
+
+## AVL Tree
+
+- **Balance Factor** = Height(left) - Height(right), 모든 노드에서 $\{-1, 0, 1\}$ 이어야 한다.
+- $|BF| \geq 2$ 이면 **회전(Rotation)**으로 재균형.
+- 높이: $h \leq 1.44 \cdot \log_2(N+2)$ (Red-Black Tree보다 **더 엄격하게** 균형 유지)
+
+**4가지 회전:**
+
+| Condition | Rotation |
+| --- | --- |
+| BF = +2, Left child BF = +1 | **LL** (Single Right Rotation) |
+| BF = -2, Right child BF = -1 | **RR** (Single Left Rotation) |
+| BF = +2, Left child BF = -1 | **LR** (Double: Left → Right) |
+| BF = -2, Right child BF = +1 | **RL** (Double: Right → Left) |
+
+**시간 복잡도:** Search, Insert, Delete 모두 $O(\log N)$
+- Insertion 시 최대 **1번**의 회전으로 해결
+- Deletion 시 최대 $O(\log N)$번의 회전이 필요할 수 있음
+- 각 노드에 **height** 값을 추가 저장
+
+---
+
+## Red-Black Tree
+
+**5가지 규칙:**
+1. Root는 항상 **Black**
+2. NIL(null) 노드는 **Black**
+3. Root에서 모든 NIL까지의 경로에 있는 **Black 노드 수가 동일** (Black Height)
+4. **Red 노드가 연속으로 올 수 없음** (Red의 자식은 반드시 Black)
+5. 새로 삽입되는 노드는 항상 **Red**
+
+**핵심 특성:**
+- 높이: $h \leq 2 \cdot \log_2(N+1)$ (AVL보다 느슨하지만 $O(\log N)$ 보장)
+- Red-Black Tree는 **2-3-4 Tree**와 동치 관계
+- 삽입 시 최대 **2번** 회전, 삭제 시 최대 **3번** 회전
+- 각 노드에 **color bit** (1 bit) 추가 저장
+
+**삽입 후 Fix-up 케이스:**
+- Uncle이 **Red** → Color Flip (부모, 삼촌, 조부모 색 반전)
+- Uncle이 **Black** + 꺾인 형태(Triangle) → 부모를 회전하여 직선으로 변환
+- Uncle이 **Black** + 직선 형태(Line) → 조부모를 회전 + 색 변경
+
+**시간 복잡도:** Search, Insert, Delete 모두 $O(\log N)$
+
+---
+
+## AVL vs Red-Black Tree 비교
+
+| Property | AVL Tree | Red-Black Tree |
+| --- | --- | --- |
+| **균형 엄격도** | 엄격 ($h \leq 1.44 \log N$) | 느슨 ($h \leq 2 \log N$) |
+| **Search** | 약간 빠름 (높이가 낮음) | 약간 느림 (높이가 높음) |
+| **Insert/Delete** | 느림 (회전 많을 수 있음) | 빠름 (회전 최대 2~3번) |
+| **추가 저장** | height (정수) | color (1 bit) |
+| **적합한 상황** | 읽기 위주 (검색 많은 경우) | 쓰기 위주 (삽입/삭제 많은 경우) |
+| **실사용 예** | DB, 조회 중심 앱 | C++ STL (`std::map`, `std::set`), Java `TreeMap`, Linux kernel |
+
